@@ -7,8 +7,8 @@ $(function() {
   Parse.$ = jQuery;
 
   // Initialize Parse with your Parse application javascript keys
-  Parse.initialize("your-application-id",
-                   "your-javascript-key");
+  Parse.initialize("hxyFPKrXCoUzTSip50v2Rpk6qBI1SBneK8EgZRed",
+                   "3xS5mmj6D7CFuEG2Ic2lD8ScwARDNk5ouJHHMwmm");
 
   // Todo Model
   // ----------
@@ -73,10 +73,33 @@ $(function() {
 
   });
 
+  var signOut = Parse.View.extend({
+		events: {
+			"click .log-out": "logOut"
+		},
+
+		el: '#user-info',
+
+		initialize: function(){
+			var self = this;
+			console.log(self);
+			this.$el.html(_.template($("#logout-template").html()));
+		},
+
+    // Logs out the user and shows the login view
+		logOut: function(e) {
+      Parse.User.logOut();
+      new LogInView();
+      this.undelegateEvents();
+      delete this;
+    },
+  });
+
   // Todo Item View
   // --------------
 
   // The DOM element for a todo item...
+
   var TodoView = Parse.View.extend({
 
     //... is a list tag.
@@ -153,7 +176,6 @@ $(function() {
       "keypress #new-todo":  "createOnEnter",
       "click #clear-completed": "clearCompleted",
       "click #toggle-all": "toggleAllComplete",
-      "click .log-out": "logOut",
       "click ul#filters a": "selectFilter"
     },
 
@@ -165,7 +187,7 @@ $(function() {
     initialize: function() {
       var self = this;
 
-      _.bindAll(this, 'addOne', 'addAll', 'addSome', 'render', 'toggleAllComplete', 'logOut', 'createOnEnter');
+      _.bindAll(this, 'addOne', 'addAll', 'addSome', 'render', 'toggleAllComplete', 'createOnEnter');
 
       // Main todo management template
       this.$el.html(_.template($("#manage-todos-template").html()));
@@ -188,14 +210,6 @@ $(function() {
       this.todos.fetch();
 
       state.on("change", this.filter, this);
-    },
-
-    // Logs out the user and shows the login view
-    logOut: function(e) {
-      Parse.User.logOut();
-      new LogInView();
-      this.undelegateEvents();
-      delete this;
     },
 
     // Re-rendering the App just means refreshing the statistics -- the rest

@@ -51,10 +51,13 @@
       </div>
     </script>
 
-    <script type="text/template" id="manage-todos-template">
+    <script type='text/template' id='logout-template'>
       <div id="user-info">
         Signed in as <%= Parse.User.current().escape("username") %> (<a href="#" class="log-out">Log out</a>)
       </div>
+    </script>
+
+    <script type="text/template" id="manage-todos-template">
 
       <div class="section">
 
