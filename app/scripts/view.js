@@ -83,7 +83,7 @@ $(function() {
 		initialize: function(){
 			var self = this;
 			console.log(self);
-			this.$el.html(_.template($("#logout-template").html()));
+			this.$el.html(_.template($("#logout-template").prepend()));
 		},
 
     // Logs out the user and shows the login view
@@ -176,7 +176,8 @@ $(function() {
       "keypress #new-todo":  "createOnEnter",
       "click #clear-completed": "clearCompleted",
       "click #toggle-all": "toggleAllComplete",
-      "click ul#filters a": "selectFilter"
+      "click ul#filters a": "selectFilter",
+      "click .log-out": "logOut"
     },
 
     el: ".content",
@@ -191,6 +192,7 @@ $(function() {
 
       // Main todo management template
       this.$el.html(_.template($("#manage-todos-template").html()));
+      this.$el.prepend(_.template($("#logout-template").html()));
       
       this.input = this.$("#new-todo");
       this.allCheckbox = this.$("#toggle-all")[0];
@@ -303,6 +305,13 @@ $(function() {
     toggleAllComplete: function () {
       var done = this.allCheckbox.checked;
       this.todos.each(function (todo) { todo.save({'done': done}); });
+    },
+
+    logOut: function(e) {
+      Parse.User.logOut();
+      new LogInView();
+      this.undelegateEvents();
+      delete this;
     }
   });
 
